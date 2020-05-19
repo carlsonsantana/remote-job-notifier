@@ -19,7 +19,7 @@ fetch(GITHUB_FRONTEND_VAGAS).then((response) => {
         title,
         description: body,
         url: html_url,
-        published_at: created_at
+        publishedAt: created_at
       };
     }
   );

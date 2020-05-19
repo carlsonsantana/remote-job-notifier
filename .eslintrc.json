@@ -1,0 +1,22 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "rules": {
+    "semi": ["error", "always"],
+    "object-curly-spacing": ["error", "never"],
+    "camelcase": ["error", {"properties": "never", "ignoreDestructuring": true}]
+  }
+}
