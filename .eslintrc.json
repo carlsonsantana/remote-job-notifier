@@ -18,6 +18,14 @@
     "semi": ["error", "always"],
     "object-curly-spacing": ["error", "never"],
     "camelcase": ["error", {"properties": "never", "ignoreDestructuring": true}],
-    "operator-linebreak": ["error", "before"]
+    "operator-linebreak": ["error", "before"],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "never",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ]
   }
 }

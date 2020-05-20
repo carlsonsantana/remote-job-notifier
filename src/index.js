@@ -1,6 +1,6 @@
 const fs = require('fs');
-const datetime = require('node-datetime');
 
+const datetime = require('node-datetime');
 const fetch = require('node-fetch');
 
 const DATE_FORMAT_STRING = 'Y-m-dT00:00:00Z';
@@ -15,30 +15,38 @@ const GITHUB_FRONTEND_VAGAS = (
   + DATE_YESTERDAY_STRING
 );
 
-fetch(GITHUB_FRONTEND_VAGAS).then((response) => {
+function convertResponseToJSON(response) {
   if (!response.ok) {
     throw new Error(response.statusText);
   }
 
   return response.json();
-}).then((response) => {
-  return response.map(
-    ({title, body, html_url, created_at}) => {
-      return {
-        title,
-        description: body,
-        url: html_url,
-        publishedAt: new Date(datetime.create(created_at).getTime())
-      };
-    }
-  );
-}).then((response) => response.filter(
-  (job) => {
+}
+
+function convertGitHubJSONToJobs(githubJSON) {
+  return githubJSON.map(({title, body, html_url, created_at}) => {
+    return {
+      title,
+      description: body,
+      url: html_url,
+      publishedAt: new Date(datetime.create(created_at).getTime())
+    };
+  });
+}
+
+function filterJobs(jobs) {
+  return jobs.filter((job) => {
     return (
       (job.publishedAt.getTime() > DATE_YESTERDAY.getTime())
       && (job.publishedAt.getTime() < DATE_TODAY.getTime())
     );
-  }
-)).then((response) => {
-  fs.writeFileSync('./jobs.json', JSON.stringify(response), 'utf-8');
-});
+  });
+}
+
+function saveJobs(jobs) {
+  fs.writeFileSync('./jobs.json', JSON.stringify(jobs), 'utf-8');
+}
+
+fetch(GITHUB_FRONTEND_VAGAS).then(convertResponseToJSON).then(
+  convertGitHubJSONToJobs
+).then(filterJobs).then(saveJobs);
