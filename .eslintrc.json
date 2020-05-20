@@ -17,6 +17,7 @@
   "rules": {
     "semi": ["error", "always"],
     "object-curly-spacing": ["error", "never"],
-    "camelcase": ["error", {"properties": "never", "ignoreDestructuring": true}]
+    "camelcase": ["error", {"properties": "never", "ignoreDestructuring": true}],
+    "operator-linebreak": ["error", "before"]
   }
 }
