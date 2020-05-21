@@ -10,10 +10,14 @@ const DATE_YESTERDAY = datetime.create(DATE_TODAY_STRING);
 DATE_YESTERDAY.offsetInDays(-1);
 const DATE_YESTERDAY_STRING = DATE_YESTERDAY.format(DATE_FORMAT_STRING);
 
-const GITHUB_FRONTEND_VAGAS = (
-  'https://api.github.com/repos/frontendbr/vagas/issues?since='
-  + DATE_YESTERDAY_STRING
-);
+const REPOSITORIES = [
+  {owner: 'frontendbr', repo: 'vagas'}
+];
+
+function getURLFromRepository({owner, repo}) {
+  const date = DATE_YESTERDAY_STRING;
+  return `https://api.github.com/repos/${owner}/${repo}/issues?since=${date}`;
+}
 
 function convertResponseToJSON(response) {
   if (!response.ok) {
@@ -43,10 +47,20 @@ function filterJobs(jobs) {
   });
 }
 
+function getJobsPromiseFromGitHub() {
+  const promises = [];
+
+  REPOSITORIES.forEach((repository) => promises.push(
+    fetch(getURLFromRepository(repository)).then(convertResponseToJSON).then(
+      convertGitHubJSONToJobs
+    ).then(filterJobs)
+  ));
+
+  return Promise.all(promises);
+}
+
 function saveJobs(jobs) {
   fs.writeFileSync('./jobs.json', JSON.stringify(jobs), 'utf-8');
 }
 
-fetch(GITHUB_FRONTEND_VAGAS).then(convertResponseToJSON).then(
-  convertGitHubJSONToJobs
-).then(filterJobs).then(saveJobs);
+getJobsPromiseFromGitHub().then((jobs) => jobs.flat()).then(saveJobs);
