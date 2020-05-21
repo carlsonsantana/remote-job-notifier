@@ -11,7 +11,8 @@ DATE_YESTERDAY.offsetInDays(-1);
 const DATE_YESTERDAY_STRING = DATE_YESTERDAY.format(DATE_FORMAT_STRING);
 
 const REPOSITORIES = [
-  {owner: 'frontendbr', repo: 'vagas'}
+  {owner: 'frontendbr', repo: 'vagas'},
+  {owner: 'backend-br', repo: 'vagas'}
 ];
 
 function getURLFromRepository({owner, repo}) {
