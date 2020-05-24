@@ -26,8 +26,12 @@ function convertResponseToJSON(response) {
   return response.json();
 }
 
-function convertGitHubJSONToJobs(githubJSON) {
-  return githubJSON.map(({title, body, html_url, created_at}) => {
+function filterIssues(issuesJSON) {
+  return issuesJSON.filter((issueJSON) => !issueJSON.pull_request);
+}
+
+function convertGitHubJSONToJobs(issuesJSON) {
+  return issuesJSON.map(({title, body, html_url, created_at}) => {
     return {
       title,
       description: body,
@@ -51,8 +55,8 @@ function getJobsPromiseFromGitHub() {
 
   REPOSITORIES.forEach((repository) => promises.push(
     fetch(getURLFromRepository(repository)).then(convertResponseToJSON).then(
-      convertGitHubJSONToJobs
-    ).then(filterJobs)
+      filterIssues
+    ).then(convertGitHubJSONToJobs).then(filterJobs)
   ));
 
   return Promise.all(promises);
