@@ -1,8 +1,7 @@
 const dialog = require('dialog');
+const jobs = require('jobs-promise');
 
-const getGitHubJobsPromise = require('./github.js');
-
-getGitHubJobsPromise().then((jobs) => {
+jobs.githubIssuesPromise().then((jobs) => {
   if (jobs.length === 0) {
     return;
   }
