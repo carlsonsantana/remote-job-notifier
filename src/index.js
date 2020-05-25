@@ -2,19 +2,9 @@ const dialog = require('dialog');
 const jobs = require('jobs-promise');
 
 jobs.githubIssuesPromise().then((jobs) => {
-  if (jobs.length === 0) {
-    return;
-  }
+  const message = jobs.map((job) => job.title + '\n' + job.url).join('\n\n');
 
-  const message = jobs.reduce((accumulator, job) => {
-    const endString = job.title + '\n' + job.url + '\n\n';
-    if (typeof accumulator === 'string') {
-      return accumulator + endString;
-    }
-    return endString;
-  });
-
-  if (message) {
+  if (message.length > 0) {
     dialog.info(message);
   }
 });
