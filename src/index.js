@@ -1,21 +1,21 @@
 const dialog = require('dialog');
+const jobs = require('jobs-promise');
 
-const getGitHubJobsPromise = require('./github.js');
+const REPOSITORIES = [
+  {owner: 'frontendbr', repo: 'vagas'},
+  {owner: 'backend-br', repo: 'vagas'}
+];
 
-getGitHubJobsPromise().then((jobs) => {
-  if (jobs.length === 0) {
-    return;
-  }
+const YESTERDAY = new Date(Date.now() - 86400000);
+YESTERDAY.setMilliseconds(0);
+YESTERDAY.setSeconds(0);
+YESTERDAY.setMinutes(0);
+YESTERDAY.setHours(0);
 
-  const message = jobs.reduce((accumulator, job) => {
-    const endString = job.title + '\n' + job.url + '\n\n';
-    if (typeof accumulator === 'string') {
-      return accumulator + endString;
-    }
-    return endString;
-  });
+jobs.githubIssuesPromise(REPOSITORIES, YESTERDAY).then((jobs) => {
+  const message = jobs.map((job) => job.title + '\n' + job.url).join('\n\n');
 
-  if (message) {
+  if (message.length > 0) {
     dialog.info(message);
   }
 });
